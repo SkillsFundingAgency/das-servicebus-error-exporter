@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Visual Studio Code
+.vscode
+__.vscode
+
 # User-specific files
 *.suo
 *.user
@@ -328,3 +332,6 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# Local Settings file
+appsettings.local.json
