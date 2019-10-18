@@ -18,6 +18,8 @@ If you run it regularly (either manually, or change it to an Azure Function or s
 
 **das.sfa.tools.AnalayseErrorQueues.domain** Simple POCO objects to provide domain abstractions over the nServiceBus message properties.
 
+The project was created using Visual Studio Code and the dotnetcore CLI.  As a result, there is not Visual Studio SLN file.  You can always create one, and add these projects to it, if Visual Studio is your preferred IDE.
+
 ## Configuration
 The program will look at for two config files.
 
