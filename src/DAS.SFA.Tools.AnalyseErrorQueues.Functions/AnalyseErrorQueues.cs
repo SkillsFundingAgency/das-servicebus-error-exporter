@@ -19,7 +19,7 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Functions
         }
 
         [FunctionName("AnalyseErrorQueues")]
-        public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo timer, ILogger log)
+        public async Task Run([TimerTrigger("0 0 */4 * * *")]TimerInfo timer, ILogger log)
         {
             if (log.IsEnabled(LogLevel.Information))
             {
