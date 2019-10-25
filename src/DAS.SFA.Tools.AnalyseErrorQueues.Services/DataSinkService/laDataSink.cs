@@ -54,18 +54,15 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService
             var workspaceId = _config["LADataSinkSettings:workspaceId"];
             var sendBatches = errorsByReceivingDomain.ChunkBy(chunkSize);
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"chunkSize: {chunkSize}");
-                _logger.LogInformation($"sendBatches: {sendBatches}");
+            _logger.LogInformation($"chunkSize: {chunkSize}");
+            _logger.LogInformation($"sendBatches: {sendBatches}");
 
 #if DEBUG
-                _logger.LogInformation($"sharedKey: {sharedKey}");
-                _logger.LogInformation($"workspaceId: {workspaceId}");
+            _logger.LogDebug($"sharedKey: {sharedKey}");
+            _logger.LogDebug($"workspaceId: {workspaceId}");
 #endif
-            }
 
-            foreach(var batch in sendBatches)
+            foreach (var batch in sendBatches)
             {
                 var jsonList = JArray.FromObject(batch);
                 var json = jsonList.ToString(Formatting.None);
@@ -101,16 +98,13 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService
             var workspaceId = _config["LADataSinkSettings:workspaceId"];
             string url = $"https://{workspaceId}.ods.opinsights.azure.com/api/logs?api-version=2016-04-01";
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"logName: {logName}");
-                _logger.LogInformation($"timestampField: {timestampField}");
+            _logger.LogInformation($"logName: {logName}");
+            _logger.LogInformation($"timestampField: {timestampField}");
 
 #if DEBUG
-                _logger.LogInformation($"workspaceId: {workspaceId}");
-                _logger.LogInformation($"url: {url}");
+            _logger.LogDebug($"workspaceId: {workspaceId}");
+            _logger.LogDebug($"url: {url}");
 #endif
-            }
 
             try
 			{

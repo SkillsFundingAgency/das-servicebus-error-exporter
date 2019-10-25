@@ -3,9 +3,9 @@
   "logging": {
     "fileLoggingMode": "always",
     "logLevel": {
-      "default": "Information",
-      "Host.Results": "Error",
-      "Function": "Error",
+      "default": "Debug",
+      "Host.Results": "Debug",
+      "Function": "Debug",
       "Host.Aggregator": "Trace"
     }
   }

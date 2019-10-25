@@ -22,6 +22,14 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Engine
             _svcBusSvc = svcBusSvc ?? throw new Exception("service is null"); 
 			_config = config ?? throw new Exception("config is null");
             _logger = logger ?? throw new Exception("Logger is null");
+
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug($"_dataSink is: {_dataSink}");
+                _logger.LogDebug($"_svcBusSvc is: {_svcBusSvc}");
+                _logger.LogDebug($"_config is: {_config}");
+                _logger.LogDebug($"_logger is: {_logger}");
+            }
         }
 
         public async Task Run()

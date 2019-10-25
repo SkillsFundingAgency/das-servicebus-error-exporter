@@ -2,7 +2,8 @@
 
 namespace DAS.SFA.Tools.AnalyseErrorQueues.Engine
 {
-    public interface IAnalyseQueues: IAnalyseQueuesBase
+    public interface IAnalyseQueuesBase
     {
+        Task Run();
     }
 }

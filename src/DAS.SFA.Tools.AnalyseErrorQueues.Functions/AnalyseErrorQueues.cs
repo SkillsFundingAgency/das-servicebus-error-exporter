@@ -5,8 +5,6 @@ using Microsoft.Extensions.Logging;
 using DAS.SFA.Tools.AnalyseErrorQueues.Engine;
 using System.Threading.Tasks;
 
-[assembly: FunctionsStartup(typeof(DAS.SFA.Tools.AnalyseErrorQueues.Functions.Startup))]
-
 namespace DAS.SFA.Tools.AnalyseErrorQueues.Functions
 {
     public class AnalyseErrorQueues
@@ -14,12 +12,16 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Functions
         private readonly IAnalyseQueues _analyser;
 
         public AnalyseErrorQueues(IAnalyseQueues analyser)
-        {
-            _analyser = analyser;
+        {            
+            _analyser = analyser ?? throw new Exception("Analyser is null");            
         }
 
         [FunctionName("AnalyseErrorQueues")]
+#if DEBUG
+        public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo timer, ILogger log)
+#else
         public async Task Run([TimerTrigger("0 0 */4 * * *")]TimerInfo timer, ILogger log)
+#endif
         {
             if (log.IsEnabled(LogLevel.Information))
             {

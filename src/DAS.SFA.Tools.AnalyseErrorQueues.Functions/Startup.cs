@@ -24,18 +24,27 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Functions
             var appDirectory = executionContextOptions.AppDirectory;
             var config = LoadConfiguration(appDirectory);
 
-            //builder.Services.AddTransient<IDataSink, psvDataSink>();
-            builder.Services.AddTransient<IDataSink, laDataSink>(s => new laDataSink(config, s.GetRequiredService<ILogger<laDataSink>>()));
+            builder.Services.AddTransient(s => new BlobDataSink(config, s.GetRequiredService<ILogger<BlobDataSink>>()));
+            builder.Services.AddTransient(s => new laDataSink(config, s.GetRequiredService<ILogger<laDataSink>>()));
             builder.Services.AddTransient<ISvcBusService, SvcBusService>(s =>  new SvcBusService(config, s.GetRequiredService<ILogger<SvcBusService>>()));
+
             builder.Services.AddTransient<IAnalyseQueues, QueueAnalyser>(s =>
             {
-                var sink = s.GetRequiredService<IDataSink>();
+                var sink = s.GetRequiredService<laDataSink>();
                 var svc = s.GetRequiredService<ISvcBusService>();
                 var log = s.GetRequiredService<ILogger<QueueAnalyser>>();
 
                 return new QueueAnalyser(sink, svc, config, log);
             });
-            builder.Services.AddTransient<AnalyseErrorQueues>();
+
+            builder.Services.AddTransient<IAnalyseQueuesBase, QueueAnalyser>(s =>
+            {
+                var sink = s.GetRequiredService<BlobDataSink>();
+                var svc = s.GetRequiredService<ISvcBusService>();
+                var log = s.GetRequiredService<ILogger<QueueAnalyser>>();
+
+                return new QueueAnalyser(sink, svc, config, log);
+            });
         }
 
         public static IConfiguration LoadConfiguration(string appDirectory)

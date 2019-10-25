@@ -29,11 +29,8 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.SvcBusService
             var messageReceiver = new MessageReceiver(sbKey, queueName);
 
 #if DEBUG
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"ServiceBusConnectionString: {sbKey}");
-                _logger.LogInformation($"PeekMessageBatchSize: {batchSize}");
-            }
+            _logger.LogDebug($"ServiceBusConnectionString: {sbKey}");
+            _logger.LogDebug($"PeekMessageBatchSize: {batchSize}");
 #endif
 
             int totalMessages = 0;
@@ -102,12 +99,15 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.SvcBusService
                 messageModel.ExceptionMessage = exceptionMessageNoCrLf;
             }
 
+#if DEBUG
+            // When developing I want to be able to use as simple a message as possible but still see some information in the output
+            // so I will just grab the message body and output it raw
             else
             {
                 _logger.LogDebug($"msg.Body: {Encoding.UTF8.GetString(msg.Body)}");
                 messageModel.RawMessage = Encoding.UTF8.GetString(msg.Body);
             }
-
+#endif
             return messageModel;
         } 
     }
