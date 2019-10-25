@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\das.sfa.tools.AnalayseErrorQueues.Engine\das.sfa.tools.AnalayseErrorQueues.Engine.csproj" />
+    <ProjectReference Include="..\DAS.SFA.Tools.AnalyseErrorQueues.Engine\DAS.SFA.Tools.AnalyseErrorQueues.Engine.csproj" />
   </ItemGroup>
 
 </Project>

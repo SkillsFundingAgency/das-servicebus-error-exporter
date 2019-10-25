@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using das.sfa.tools.AnalayseErrorQueues.domain;
+using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
 
-namespace das.sfa.tools.AnalayseErrorQueues.services.DataSinkService
+namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService
 {
     public class psvDataSink : IDataSink
     {
         public void SinkMessages(string envName, string queueName, IEnumerable<sbMessageModel> messages)
         {
+           
             var sb = new StringBuilder();
             sb.AppendLine("MessageId | TimeOfFailure | ExceptionType | OriginatingEndpoint | ProcessingEndpoint | EnclosedMessageTypes | ExceptionMessage | Stack Trace");
             foreach (var msg in messages)

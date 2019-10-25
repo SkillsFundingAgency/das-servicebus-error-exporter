@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using das.sfa.tools.AnalayseErrorQueues.domain;
+using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
 
-namespace das.sfa.tools.AnalayseErrorQueues.services.SvcBusService
+namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.SvcBusService
 {
     public interface ISvcBusService
     {

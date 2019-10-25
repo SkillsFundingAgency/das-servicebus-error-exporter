@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using das.sfa.tools.AnalayseErrorQueues.Engine;
-using das.sfa.tools.AnalayseErrorQueues.services.SvcBusService;
-using das.sfa.tools.AnalayseErrorQueues.services.DataSinkService;
+using DAS.SFA.Tools.AnalyseErrorQueues.Engine;
+using DAS.SFA.Tools.AnalyseErrorQueues.Services.SvcBusService;
+using DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService;
 
-namespace das.sfa.tools.AnalayseErrorQueues.console
+namespace DAS.SFA.Tools.AnalyseErrorQueues.Console
 {
     class Program
     {
@@ -23,7 +23,7 @@ namespace das.sfa.tools.AnalayseErrorQueues.console
         
             // Kick off our actual code
             var retVal = await serviceProvider.GetService<QueueAnalyser>().Run();
-            Console.Read();
+            System.Console.Read();
 
             return retVal;
         }

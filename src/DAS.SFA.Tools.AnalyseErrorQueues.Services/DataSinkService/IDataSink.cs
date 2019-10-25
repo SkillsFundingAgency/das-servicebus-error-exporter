@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using das.sfa.tools.AnalayseErrorQueues.domain;
+using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
 
-namespace das.sfa.tools.AnalayseErrorQueues.services.DataSinkService
+namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService
 {
     public interface IDataSink
     {

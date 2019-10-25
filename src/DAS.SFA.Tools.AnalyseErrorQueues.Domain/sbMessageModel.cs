@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace das.sfa.tools.AnalayseErrorQueues.domain
+namespace DAS.SFA.Tools.AnalyseErrorQueues.Domain
 {
     public class sbMessageModel
     {
@@ -12,5 +12,6 @@ namespace das.sfa.tools.AnalayseErrorQueues.domain
         public string EnclosedMessageTypes { get; set; }
         public string ExceptionMessage { get; set; }
         public object StackTrace { get; set; }
+        public string RawMessage { get; set; }
     }
 }

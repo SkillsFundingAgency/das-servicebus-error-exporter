@@ -10,26 +10,28 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using das.sfa.tools.AnalayseErrorQueues.domain;
+using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
 
-namespace das.sfa.tools.AnalayseErrorQueues.services.DataSinkService
+namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService
 {
     public class laDataSink : IDataSink
     {
-        static string datestring = string.Empty;
-		IConfiguration _config;
-		ILogger _logger;
+		private static string datestring = string.Empty;
+		private readonly IConfiguration _config;
+		private readonly ILogger _logger;
 
 		public laDataSink(IConfiguration config, ILogger<laDataSink> logger)
 		{
-			_config = config;
-			_logger = logger;
+			_config = config ?? throw new Exception("config is null");
+			_logger = logger ?? throw new Exception("logger is null");
 		}
 
         public void SinkMessages(string envName, string queueName, IEnumerable<sbMessageModel> messages)
         {
             // Create a hash for the API signature
-			datestring = datestring == string.Empty ? DateTime.UtcNow.ToString("r") : datestring;
+#pragma warning disable S2696 // Instance members should not write to "static" fields
+            datestring = datestring == string.Empty ? DateTime.UtcNow.ToString("r") : datestring;
+#pragma warning restore S2696 // Instance members should not write to "static" fields
 
             // Create aggregate messages to send to azure log analytics.
             var errorsByReceivingDomain =
@@ -47,17 +49,33 @@ namespace das.sfa.tools.AnalayseErrorQueues.services.DataSinkService
                 };
 
             // Send to log analytics in small(ish) batches.  We dont want to send 100s of messages in one go.
-            var sendBatches = errorsByReceivingDomain.ChunkBy(_config.GetValue<int>("LADataSinkSettings:ChunkSize"));
+            var chunkSize = _config.GetValue<int>("LADataSinkSettings:ChunkSize");
+            var sharedKey = _config["LADataSinkSettings:sharedKey"];
+            var workspaceId = _config["LADataSinkSettings:workspaceId"];
+            var sendBatches = errorsByReceivingDomain.ChunkBy(chunkSize);
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"chunkSize: {chunkSize}");
+                _logger.LogInformation($"sendBatches: {sendBatches}");
+
+#if DEBUG
+                _logger.LogInformation($"sharedKey: {sharedKey}");
+                _logger.LogInformation($"workspaceId: {workspaceId}");
+#endif
+            }
 
             foreach(var batch in sendBatches)
             {
                 var jsonList = JArray.FromObject(batch);
                 var json = jsonList.ToString(Formatting.None);
-                
+
+                _logger.LogInformation($"json: {json}");
+
                 var jsonBytes = Encoding.UTF8.GetBytes(json);
                 string stringToHash = "POST\n" + jsonBytes.Length + "\napplication/json\n" + "x-ms-date:" + datestring + "\n/api/logs";
-                string hashedString = BuildSignature(stringToHash, _config["LADataSinkSettings:sharedKey"]);
-                string signature = "SharedKey " + _config["LADataSinkSettings:workspaceId"] + ":" + hashedString;
+                string hashedString = BuildSignature(stringToHash, sharedKey);
+                string signature = $"SharedKey {workspaceId}:{hashedString}";
 
                 PostData(signature, datestring, json);
             }
@@ -78,28 +96,43 @@ namespace das.sfa.tools.AnalayseErrorQueues.services.DataSinkService
 		// Send a request to the POST API endpoint
 		public void PostData(string signature, string date, string json)
 		{
-			try
-			{
-				string url = "https://" + _config["LADataSinkSettings:workspaceId"] + ".ods.opinsights.azure.com/api/logs?api-version=2016-04-01";
+            var logName = _config["LADataSinkSettings:LogName"];
+            var timestampField = _config["LADataSinkSettings:TimeStampField"];
+            var workspaceId = _config["LADataSinkSettings:workspaceId"];
+            string url = $"https://{workspaceId}.ods.opinsights.azure.com/api/logs?api-version=2016-04-01";
 
-				System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"logName: {logName}");
+                _logger.LogInformation($"timestampField: {timestampField}");
+
+#if DEBUG
+                _logger.LogInformation($"workspaceId: {workspaceId}");
+                _logger.LogInformation($"url: {url}");
+#endif
+            }
+
+            try
+			{
+				HttpClient client = new System.Net.Http.HttpClient();
 				client.DefaultRequestHeaders.Add("Accept", "application/json");
-				client.DefaultRequestHeaders.Add("Log-Type", _config["LADataSinkSettings:LogName"]);
+				client.DefaultRequestHeaders.Add("Log-Type", logName);
 				client.DefaultRequestHeaders.Add("Authorization", signature);
 				client.DefaultRequestHeaders.Add("x-ms-date", date);
-				client.DefaultRequestHeaders.Add("time-generated-field", _config["LADataSinkSettings:TimeStampField"]);
+				client.DefaultRequestHeaders.Add("time-generated-field", timestampField);
 
-				System.Net.Http.HttpContent httpContent = new StringContent(json, Encoding.UTF8);
+				HttpContent httpContent = new StringContent(json, Encoding.UTF8);
 				httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-				Task<System.Net.Http.HttpResponseMessage> response = client.PostAsync(new Uri(url), httpContent);
+				Task<HttpResponseMessage> response = client.PostAsync(new Uri(url), httpContent);
 
-				System.Net.Http.HttpContent responseContent = response.Result.Content;
+				HttpContent responseContent = response.Result.Content;
 				string result = responseContent.ReadAsStringAsync().Result;
-			}
-			catch (Exception excep)
+            }
+			catch (Exception ex)
 			{
-				_logger.LogError($"Error POSTing to Log Analytics: {excep.Message}");
+				_logger.LogCritical($"Error POSTing to Log Analytics: {ex.ToString()}");
 			}
-		}        
+		}
+		        
     }
 }

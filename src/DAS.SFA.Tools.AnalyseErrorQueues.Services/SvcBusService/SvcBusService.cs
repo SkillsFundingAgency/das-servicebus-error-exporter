@@ -5,41 +5,57 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using das.sfa.tools.AnalayseErrorQueues.domain;
+using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
+using System.Text;
 
-namespace das.sfa.tools.AnalayseErrorQueues.services.SvcBusService
+namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.SvcBusService
 {
     public class SvcBusService : ISvcBusService
     {
-		IConfiguration _config;
-		ILogger _logger;
+        private readonly IConfiguration _config;
+		private readonly ILogger _logger;
 
         public SvcBusService(IConfiguration config, ILogger<SvcBusService> logger)
         {
-			_config = config;
-			_logger = logger;
+			_config = config ?? throw new Exception("config is null");
+			_logger = logger ?? throw new Exception("logger is null");
         }
 
         public async Task<IList<sbMessageModel>> PeekMessages(string queueName)
         {
-            var messageReceiver = new MessageReceiver(_config.GetValue<string>("ServiceBusRepoSettings:ServiceBusConnectionString"), queueName);
-            int totalMessages = 0;
-            IList<Message> peekedMessages = null;
-            var formattedMessages = new List<sbMessageModel>();
-            peekedMessages = await messageReceiver.PeekAsync(_config.GetValue<int>("ServiceBusRepoSettings:PeekMessageBatchSize"));
+            var sbKey = _config.GetValue<string>("ServiceBusRepoSettings:ServiceBusConnectionString");
+            var batchSize = _config.GetValue<int>("ServiceBusRepoSettings:PeekMessageBatchSize");
+            var notifyBatchSize = _config.GetValue<int>("ServiceBusRepoSettings:NotifyUIBatchSize");
+            var messageReceiver = new MessageReceiver(sbKey, queueName);
 
-            while(peekedMessages.Count > 0)
+#if DEBUG
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"ServiceBusConnectionString: {sbKey}");
+                _logger.LogInformation($"PeekMessageBatchSize: {batchSize}");
+            }
+#endif
+
+            int totalMessages = 0;
+            IList<Message> peekedMessages;
+            var formattedMessages = new List<sbMessageModel>();
+
+            peekedMessages = await messageReceiver.PeekAsync(batchSize);
+
+            _logger.LogDebug($"Peeked Message Count: {peekedMessages.Count}");
+
+            while (peekedMessages.Count > 0)
             {
                 foreach(var msg in peekedMessages)
                 {
                     var messageModel = FormatMsgToLog(msg);
                     totalMessages++;
-                    if (totalMessages % _config.GetValue<int>("ServiceBusRepoSettings:NotifyUIBatchSize") == 0)
+                    if (totalMessages % notifyBatchSize == 0)
                         _logger.LogDebug($"    {queueName} - processed: {totalMessages}");
                
                     formattedMessages.Add(messageModel);
                 }
-                peekedMessages = await messageReceiver.PeekAsync(_config.GetValue<int>("ServiceBusRepoSettings:PeekMessageBatchSize"));
+                peekedMessages = await messageReceiver.PeekAsync(batchSize);
             }
             await messageReceiver.CloseAsync();
 
@@ -48,8 +64,8 @@ namespace das.sfa.tools.AnalayseErrorQueues.services.SvcBusService
 
         private sbMessageModel FormatMsgToLog(Message msg)
         {
-            object exceptionMessage = "";
-            string exceptionMessageNoCrLf = string.Empty;;
+            object exceptionMessage = string.Empty;
+            string exceptionMessageNoCrLf = string.Empty;
             string enclosedMessageTypeTrimmed = string.Empty;
             var messageModel = new sbMessageModel();
             if (msg.UserProperties.TryGetValue("NServiceBus.ExceptionInfo.Message", out exceptionMessage))
@@ -69,9 +85,8 @@ namespace das.sfa.tools.AnalayseErrorQueues.services.SvcBusService
                 messageModel.StackTrace = msg.UserProperties["NServiceBus.ExceptionInfo.StackTrace"].ToString().CrLfToTilde();
                 messageModel.ExceptionMessage = exceptionMessageNoCrLf;
             }
-            else
+            else if(msg.UserProperties.TryGetValue("DeadLetterReason", out exceptionMessage))
             {
-                msg.UserProperties.TryGetValue("DeadLetterReason", out exceptionMessage);
                 exceptionMessageNoCrLf = exceptionMessage.ToString().CrLfToTilde();
                 enclosedMessageTypeTrimmed = msg.UserProperties.ContainsKey("NServiceBus.EnclosedMessageTypes")
                     ? msg.UserProperties["NServiceBus.EnclosedMessageTypes"].ToString().Split(',')[0]
@@ -86,7 +101,14 @@ namespace das.sfa.tools.AnalayseErrorQueues.services.SvcBusService
                 messageModel.EnclosedMessageTypes = enclosedMessageTypeTrimmed;
                 messageModel.ExceptionMessage = exceptionMessageNoCrLf;
             }
+
+            else
+            {
+                _logger.LogDebug($"msg.Body: {Encoding.UTF8.GetString(msg.Body)}");
+                messageModel.RawMessage = Encoding.UTF8.GetString(msg.Body);
+            }
+
             return messageModel;
-        }        
+        } 
     }
 }
