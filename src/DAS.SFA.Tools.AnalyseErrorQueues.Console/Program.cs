@@ -14,7 +14,7 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Console
 {
     class Program
     {
-        async static Task<int> Main(string[] args)
+        async static Task Main(string[] args)
         {
             // Create service collection and configure our services
             var services = ConfigureServices();
@@ -22,10 +22,8 @@ namespace DAS.SFA.Tools.AnalyseErrorQueues.Console
             var serviceProvider = services.BuildServiceProvider();
         
             // Kick off our actual code
-            var retVal = await serviceProvider.GetService<QueueAnalyser>().Run();
+            await serviceProvider.GetService<QueueAnalyser>().Run();
             System.Console.Read();
-
-            return retVal;
         }
 
         private static IServiceCollection ConfigureServices()
