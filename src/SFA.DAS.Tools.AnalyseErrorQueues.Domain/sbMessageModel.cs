@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Domain
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Domain
 {
     public class sbMessageModel
     {

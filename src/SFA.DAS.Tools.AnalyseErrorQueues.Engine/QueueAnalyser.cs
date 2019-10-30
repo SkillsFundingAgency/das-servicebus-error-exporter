@@ -3,11 +3,11 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using DAS.SFA.Tools.AnalyseErrorQueues.Services.SvcBusService;
-using DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService;
+using SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService;
+using SFA.DAS.Tools.AnalyseErrorQueues.Services.DataSinkService;
 using System.Linq;
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Engine
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Engine
 {
     public class QueueAnalyser : IAnalyseQueues
     {

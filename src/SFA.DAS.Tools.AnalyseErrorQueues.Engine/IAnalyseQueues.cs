@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Engine
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Engine
 {
     public interface IAnalyseQueues: IAnalyseQueuesBase
     {

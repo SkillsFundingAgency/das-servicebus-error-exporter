@@ -1,4 +1,4 @@
-﻿using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
+﻿using SFA.DAS.Tools.AnalyseErrorQueues.Domain;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.DataSinkService
 {
     public class BlobDataSink : IDataSink
     {

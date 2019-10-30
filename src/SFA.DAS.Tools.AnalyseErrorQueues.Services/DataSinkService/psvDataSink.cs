@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
+using SFA.DAS.Tools.AnalyseErrorQueues.Domain;
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.DataSinkService
 {
     public class psvDataSink : IDataSink
     {

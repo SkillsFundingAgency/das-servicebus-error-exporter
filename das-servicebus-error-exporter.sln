@@ -1,19 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8A8AAD6A-8536-4A39-9735-B8D5E36788C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "das.sfa.tools.AnalyseErrorQueues.console", "src\das.sfa.tools.AnalyseErrorQueues.console\das.sfa.tools.AnalyseErrorQueues.console.csproj", "{F0C81FEA-7DDC-4C1E-9E41-9E00ED28D958}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.console", "src\sfa.das.tools.AnalyseErrorQueues.console\sfa.das.tools.AnalyseErrorQueues.console.csproj", "{F0C81FEA-7DDC-4C1E-9E41-9E00ED28D958}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "das.sfa.tools.AnalyseErrorQueues.domain", "src\das.sfa.tools.AnalyseErrorQueues.domain\das.sfa.tools.AnalyseErrorQueues.domain.csproj", "{DC8CC90C-6713-4E34-9116-2648B9D858D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.domain", "src\sfa.das.tools.AnalyseErrorQueues.domain\sfa.das.tools.AnalyseErrorQueues.domain.csproj", "{DC8CC90C-6713-4E34-9116-2648B9D858D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "das.sfa.tools.AnalyseErrorQueues.Engine", "src\das.sfa.tools.AnalyseErrorQueues.Engine\das.sfa.tools.AnalyseErrorQueues.Engine.csproj", "{8D9982A2-8498-4F1A-8FFE-6C4B5484C1E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.Engine", "src\sfa.das.tools.AnalyseErrorQueues.Engine\sfa.das.tools.AnalyseErrorQueues.Engine.csproj", "{8D9982A2-8498-4F1A-8FFE-6C4B5484C1E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "das.sfa.tools.AnalyseErrorQueues.services", "src\das.sfa.tools.AnalyseErrorQueues.services\das.sfa.tools.AnalyseErrorQueues.services.csproj", "{A1B91A95-286D-4419-9CC7-79D0E86A6C26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.services", "src\sfa.das.tools.AnalyseErrorQueues.services\sfa.das.tools.AnalyseErrorQueues.services.csproj", "{A1B91A95-286D-4419-9CC7-79D0E86A6C26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "das.sfa.tools.AnalyseErrorQueues.functions", "src\das.sfa.tools.AnalyseErrorQueues.functions\das.sfa.tools.AnalyseErrorQueues.functions.csproj", "{2E1C4A0A-434E-4F26-8B0C-EE577C05C1DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.functions", "src\sfa.das.tools.AnalyseErrorQueues.functions\sfa.das.tools.AnalyseErrorQueues.functions.csproj", "{2E1C4A0A-434E-4F26-8B0C-EE577C05C1DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,9 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F0C81FEA-7DDC-4C1E-9E41-9E00ED28D958}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -89,11 +86,17 @@ Global
 		{2E1C4A0A-434E-4F26-8B0C-EE577C05C1DB}.Release|x86.ActiveCfg = Release|Any CPU
 		{2E1C4A0A-434E-4F26-8B0C-EE577C05C1DB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F0C81FEA-7DDC-4C1E-9E41-9E00ED28D958} = {8A8AAD6A-8536-4A39-9735-B8D5E36788C7}
 		{DC8CC90C-6713-4E34-9116-2648B9D858D4} = {8A8AAD6A-8536-4A39-9735-B8D5E36788C7}
 		{8D9982A2-8498-4F1A-8FFE-6C4B5484C1E6} = {8A8AAD6A-8536-4A39-9735-B8D5E36788C7}
 		{A1B91A95-286D-4419-9CC7-79D0E86A6C26} = {8A8AAD6A-8536-4A39-9735-B8D5E36788C7}
 		{2E1C4A0A-434E-4F26-8B0C-EE577C05C1DB} = {8A8AAD6A-8536-4A39-9735-B8D5E36788C7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0713195F-CD88-4195-A359-DF5A20B81E14}
 	EndGlobalSection
 EndGlobal

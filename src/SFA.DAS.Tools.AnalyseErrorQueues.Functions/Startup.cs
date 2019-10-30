@@ -1,6 +1,6 @@
-using DAS.SFA.Tools.AnalyseErrorQueues.Engine;
-using DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService;
-using DAS.SFA.Tools.AnalyseErrorQueues.Services.SvcBusService;
+using SFA.DAS.Tools.AnalyseErrorQueues.Engine;
+using SFA.DAS.Tools.AnalyseErrorQueues.Services.DataSinkService;
+using SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Host.Bindings;
 using Microsoft.Extensions.Configuration;
@@ -9,9 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
-[assembly: FunctionsStartup(typeof(DAS.SFA.Tools.AnalyseErrorQueues.Functions.Startup))]
+[assembly: FunctionsStartup(typeof(SFA.DAS.Tools.AnalyseErrorQueues.Functions.Startup))]
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Functions
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Functions
 {
     public class Startup : FunctionsStartup
     {

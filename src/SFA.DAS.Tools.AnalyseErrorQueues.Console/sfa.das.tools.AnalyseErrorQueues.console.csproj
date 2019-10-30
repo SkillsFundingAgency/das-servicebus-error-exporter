@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,7 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DAS.SFA.Tools.AnalyseErrorQueues.Engine\DAS.SFA.Tools.AnalyseErrorQueues.Engine.csproj" />
+    <ProjectReference Include="..\sfa.das.tools.AnalyseErrorQueues.Engine\sfa.das.tools.AnalyseErrorQueues.Engine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.local.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -5,10 +5,10 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
+using SFA.DAS.Tools.AnalyseErrorQueues.Domain;
 using System.Text;
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.SvcBusService
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
 {
     public class SvcBusService : ISvcBusService
     {

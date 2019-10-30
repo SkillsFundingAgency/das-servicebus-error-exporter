@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DAS.SFA.Tools.AnalyseErrorQueues.Services\DAS.SFA.Tools.AnalyseErrorQueues.Services.csproj" />
-    <ProjectReference Include="..\DAS.SFA.Tools.AnalyseErrorQueues.Domain\DAS.SFA.Tools.AnalyseErrorQueues.Domain.csproj" />
+    <ProjectReference Include="..\sfa.das.tools.AnalyseErrorQueues.domain\sfa.das.tools.AnalyseErrorQueues.domain.csproj" />
+    <ProjectReference Include="..\sfa.das.tools.AnalyseErrorQueues.services\sfa.das.tools.AnalyseErrorQueues.services.csproj" />
   </ItemGroup>
   
   <ItemGroup>

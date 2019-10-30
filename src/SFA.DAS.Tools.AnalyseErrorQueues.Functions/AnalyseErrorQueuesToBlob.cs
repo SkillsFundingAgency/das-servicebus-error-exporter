@@ -2,10 +2,10 @@
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using DAS.SFA.Tools.AnalyseErrorQueues.Engine;
+using SFA.DAS.Tools.AnalyseErrorQueues.Engine;
 using System.Threading.Tasks;
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Functions
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Functions
 {
     public class AnalyseErrorQueuesToBlob
     {

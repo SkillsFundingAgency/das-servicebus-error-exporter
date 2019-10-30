@@ -10,9 +10,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using DAS.SFA.Tools.AnalyseErrorQueues.Domain;
+using SFA.DAS.Tools.AnalyseErrorQueues.Domain;
 
-namespace DAS.SFA.Tools.AnalyseErrorQueues.Services.DataSinkService
+namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.DataSinkService
 {
     public class laDataSink : IDataSink
     {
