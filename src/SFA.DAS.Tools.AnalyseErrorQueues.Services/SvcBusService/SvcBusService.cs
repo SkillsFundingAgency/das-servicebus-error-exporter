@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
+using Microsoft.Azure.ServiceBus.Primitives;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Tools.AnalyseErrorQueues.Domain;
@@ -23,13 +24,16 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
 
         public async Task<IList<sbMessageModel>> PeekMessages(string queueName)
         {
-            var sbKey = _config.GetValue<string>("ServiceBusRepoSettings:ServiceBusConnectionString");
+            var sbConnectionString = _config.GetValue<string>("ServiceBusRepoSettings:ServiceBusConnectionString");
             var batchSize = _config.GetValue<int>("ServiceBusRepoSettings:PeekMessageBatchSize");
             var notifyBatchSize = _config.GetValue<int>("ServiceBusRepoSettings:NotifyUIBatchSize");
-            var messageReceiver = new MessageReceiver(sbKey, queueName);
+
+            var sbConnectionStringBuilder = new ServiceBusConnectionStringBuilder(sbConnectionString);
+            var tokenProvider = TokenProvider.CreateManagedServiceIdentityTokenProvider();
+            var messageReceiver = new MessageReceiver(sbConnectionStringBuilder.Endpoint, queueName, tokenProvider);
 
 #if DEBUG
-            _logger.LogDebug($"ServiceBusConnectionString: {sbKey}");
+            _logger.LogDebug($"ServiceBusConnectionString: {sbConnectionString}");
             _logger.LogDebug($"PeekMessageBatchSize: {batchSize}");
 #endif
 
