@@ -29,3 +29,19 @@ The program will look at for two config files.
 and will load settings from both.
 
 The _appsettings.local.json_ file is excluded from Git check in (via gitignore) and it is recommended that you create one of these locally for your sensitive settings.  If you look at the included _appsettings.json_ file, it shows you what settings you need to provide.  Simply copy _appsettings.json_ to _appsettings.local.json_ and update as necessary with your information, you do not need to modify the _appsettings.json_ (which does get checked in).  This will ensure you do not check in any sensitive information.
+
+## MSI auth with Visual Studio 2019
+
+We were not able to get MSI auth working with Microsoft Account and had to create Azure Active Directory account instead. 
+
+- In azure portal go to Users and Create a new user.
+- Give user access to the Service Bus
+  - Service Bus Namespace > Access control (IAM) > Add role assignment  
+    - Role - Azure Service Bus Data Receiver
+    - Select - user name
+- Configure user in Visual Studio 
+  - Tools > Options > Azure Service Authentication > Account Selection
+
+Issue details:
+https://github.com/Azure/azure-sdk-for-net/issues/8627
+
