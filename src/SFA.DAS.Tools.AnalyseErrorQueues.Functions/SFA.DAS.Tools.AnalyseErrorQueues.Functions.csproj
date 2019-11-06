@@ -25,6 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Tools.AnalyseErrorQueues.Engine\SFA.DAS.Tools.AnalyseErrorQueues.Engine.csproj" />
-    <ProjectReference Include="..\SFA.DAS.Tools.AnalyseErrorQueues.services\SFA.DAS.Tools.AnalyseErrorQueues.Services.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Tools.AnalyseErrorQueues.Services\SFA.DAS.Tools.AnalyseErrorQueues.Services.csproj" />
   </ItemGroup>
 </Project>
