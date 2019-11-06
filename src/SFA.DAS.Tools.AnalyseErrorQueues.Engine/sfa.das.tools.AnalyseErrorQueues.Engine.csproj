@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sfa.das.tools.AnalyseErrorQueues.domain\sfa.das.tools.AnalyseErrorQueues.domain.csproj" />
-    <ProjectReference Include="..\sfa.das.tools.AnalyseErrorQueues.services\sfa.das.tools.AnalyseErrorQueues.services.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Tools.AnalyseErrorQueues.domain\SFA.DAS.Tools.AnalyseErrorQueues.Domain.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Tools.AnalyseErrorQueues.services\SFA.DAS.Tools.AnalyseErrorQueues.Services.csproj" />
   </ItemGroup>
   
   <ItemGroup>

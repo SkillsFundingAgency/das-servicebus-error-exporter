@@ -40,7 +40,7 @@ steps:
   inputs:
     command: publish
     publishWebProjects: false
-    projects: 'src/SFA.DAS.Tools.AnalyseErrorQueues.Functions/sfa.das.tools.AnalyseErrorQueues.functions.csproj'
+    projects: 'src/SFA.DAS.Tools.AnalyseErrorQueues.Functions/SFA.DAS.Tools.AnalyseErrorQueues.Functions.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
 
 - task: CopyFiles@2

@@ -5,15 +5,15 @@ VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8A8AAD6A-8536-4A39-9735-B8D5E36788C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.console", "src\sfa.das.tools.AnalyseErrorQueues.console\sfa.das.tools.AnalyseErrorQueues.console.csproj", "{F0C81FEA-7DDC-4C1E-9E41-9E00ED28D958}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Tools.AnalyseErrorQueues.Console", "src\sfa.das.tools.AnalyseErrorQueues.console\SFA.DAS.Tools.AnalyseErrorQueues.Console.csproj", "{F0C81FEA-7DDC-4C1E-9E41-9E00ED28D958}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.domain", "src\sfa.das.tools.AnalyseErrorQueues.domain\sfa.das.tools.AnalyseErrorQueues.domain.csproj", "{DC8CC90C-6713-4E34-9116-2648B9D858D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Tools.AnalyseErrorQueues.Domain", "src\sfa.das.tools.AnalyseErrorQueues.domain\SFA.DAS.Tools.AnalyseErrorQueues.Domain.csproj", "{DC8CC90C-6713-4E34-9116-2648B9D858D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.Engine", "src\sfa.das.tools.AnalyseErrorQueues.Engine\sfa.das.tools.AnalyseErrorQueues.Engine.csproj", "{8D9982A2-8498-4F1A-8FFE-6C4B5484C1E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Tools.AnalyseErrorQueues.Engine", "src\sfa.das.tools.AnalyseErrorQueues.Engine\SFA.DAS.Tools.AnalyseErrorQueues.Engine.csproj", "{8D9982A2-8498-4F1A-8FFE-6C4B5484C1E6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.services", "src\sfa.das.tools.AnalyseErrorQueues.services\sfa.das.tools.AnalyseErrorQueues.services.csproj", "{A1B91A95-286D-4419-9CC7-79D0E86A6C26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Tools.AnalyseErrorQueues.Services", "src\sfa.das.tools.AnalyseErrorQueues.services\SFA.DAS.Tools.AnalyseErrorQueues.Services.csproj", "{A1B91A95-286D-4419-9CC7-79D0E86A6C26}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfa.das.tools.AnalyseErrorQueues.functions", "src\sfa.das.tools.AnalyseErrorQueues.functions\sfa.das.tools.AnalyseErrorQueues.functions.csproj", "{2E1C4A0A-434E-4F26-8B0C-EE577C05C1DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Tools.AnalyseErrorQueues.Functions", "src\sfa.das.tools.AnalyseErrorQueues.functions\SFA.DAS.Tools.AnalyseErrorQueues.Functions.csproj", "{2E1C4A0A-434E-4F26-8B0C-EE577C05C1DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

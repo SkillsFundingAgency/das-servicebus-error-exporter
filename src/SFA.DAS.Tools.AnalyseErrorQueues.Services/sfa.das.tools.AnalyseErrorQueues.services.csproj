@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sfa.das.tools.AnalyseErrorQueues.domain\sfa.das.tools.AnalyseErrorQueues.domain.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Tools.AnalyseErrorQueues.domain\SFA.DAS.Tools.AnalyseErrorQueues.Domain.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
