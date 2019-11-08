@@ -7,7 +7,7 @@
             "metadata": {
             }
         },
-        "resourceEenvironmentName": {
+        "resourceEnvironmentName": {
             "type": "string",
             "metadata": {
             }
@@ -39,7 +39,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('environmentName'),'-', parameters('serviceName')))]",
         "consumptionPlanName": "[concat(variables('resourceNamePrefix'),'-casp')]",
         "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
-        "storageAccountName": "[tolower(concat('das', parameters('resourceEenvironmentName'), parameters('serviceName'), 'str' ))]",
+        "storageAccountName": "[tolower(concat('das', parameters('resourceEnvironmentName'), parameters('serviceName'), 'str' ))]",
         "storageAccountContainerArray": [
             {
                 "name": "errors"
