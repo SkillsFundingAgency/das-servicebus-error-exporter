@@ -29,7 +29,7 @@
         }
     },
     "variables": {
-        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/DASD-6949/templates/",
+        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "consumptionPlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
         "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
