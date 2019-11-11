@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using SFA.DAS.Tools.AnalyseErrorQueues.Functions.Infrastructure;
+using NLog.Extensions.Logging;
 
 [assembly: FunctionsStartup(typeof(SFA.DAS.Tools.AnalyseErrorQueues.Functions.Startup))]
 
@@ -17,12 +19,15 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Functions
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
+            var sp = builder.Services.BuildServiceProvider();
+
             var executionContextOptions = builder.Services.BuildServiceProvider()
                 .GetService<IOptions<ExecutionContextOptions>>()
                 .Value
             ;
             var appDirectory = executionContextOptions.AppDirectory;
-            var config = LoadConfiguration(appDirectory);
+            var configurationService = sp.GetService<IConfiguration>();
+            var config = LoadConfiguration(appDirectory, configurationService);
 
             builder.Services.AddTransient(s => new BlobDataSink(config, s.GetRequiredService<ILogger<BlobDataSink>>()));
             builder.Services.AddTransient(s => new laDataSink(config, s.GetRequiredService<ILogger<laDataSink>>()));
@@ -45,9 +50,26 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Functions
 
                 return new QueueAnalyser(sink, svc, config, log);
             });
+
+            //nlog
+            
+            var nLogConfiguration = new NLogConfiguration();
+            builder.Services.AddLogging((options) =>
+            {
+                options.SetMinimumLevel(LogLevel.Trace);
+                options.SetMinimumLevel(LogLevel.Trace);
+                options.AddNLog(new NLogProviderOptions
+                {
+                    CaptureMessageTemplates = true,
+                    CaptureMessageProperties = true
+                });
+                options.AddConsole();
+
+                nLogConfiguration.ConfigureNLog(configurationService);
+            });                           
         }
 
-        public static IConfiguration LoadConfiguration(string appDirectory)
+        public static IConfiguration LoadConfiguration(string appDirectory, IConfiguration configurationService)
         {
             Trace.WriteLine($"appDirectory: {appDirectory}");
             var builder = new ConfigurationBuilder()
@@ -61,7 +83,13 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Functions
                 .AddJsonFile("local.appsettings.json",
                     optional: true, 
                     reloadOnChange: true)                    
-                ;
+                .AddConfiguration(configurationService)
+                .AddEnvironmentVariables()
+                .AddAzureTableStorageConfiguration(
+                    configurationService["ConfigurationStorageConnectionString"],
+                    configurationService["AppName"],
+                    configurationService["EnvironmentName"],
+                    "1.0", "SFA.DAS.Tools.AnalyseErrorQueues.Functions");
             return builder.Build();
         }
     }
