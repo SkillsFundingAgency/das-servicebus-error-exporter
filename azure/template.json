@@ -24,9 +24,6 @@
         "sharedStorageAccountConnectionString": {
             "type": "securestring"
         },
-        "sharedStorageAccountName": {
-            "type": "string"
-        },
         "sharedResourceGroup": {
             "type": "string"
         }
@@ -36,6 +33,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "consumptionPlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
         "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
+        "sharedStorageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'),'sharedstr'))]",
         "storageAccountContainerArray": [
             {
                 "name": "service-bus-errors-exporter"
@@ -57,7 +55,7 @@
                 },
                 "parameters": {
                     "storageAccountName": {
-                        "value": "[parameters('sharedStorageAccountName')]"
+                        "value": "[variables('sharedStorageAccountName')]"
                     },
                     "containerName": {
                         "value": "[variables('storageAccountContainerArray')[copyIndex()].name]"
