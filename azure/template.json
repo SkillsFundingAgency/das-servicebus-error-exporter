@@ -149,6 +149,10 @@
                                 "value": "~2"
                             },
                             {
+                                "name": "FUNCTIONS_WORKER_RUNTIME",
+                                "value": "dotnet"
+                            },
+                            {
                                 "name": "EnvironmentName",
                                 "value": "[toUpper(parameters('environmentName'))]"
                             },
