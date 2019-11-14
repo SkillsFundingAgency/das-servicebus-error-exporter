@@ -8,18 +8,44 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Tools.AnalyseErrorQueues.Domain;
 using System.Text;
+using Microsoft.Azure.ServiceBus.Management;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
 {
     public class SvcBusService : ISvcBusService
     {
         private readonly IConfiguration _config;
-		private readonly ILogger _logger;
+        private readonly ILogger _logger;
 
         public SvcBusService(IConfiguration config, ILogger<SvcBusService> logger)
         {
-			_config = config ?? throw new Exception("config is null");
-			_logger = logger ?? throw new Exception("logger is null");
+            _config = config ?? throw new Exception("config is null");
+            _logger = logger ?? throw new Exception("logger is null");
+        }
+
+        public async Task<IEnumerable<string>> GetErrorQueuesAsync()
+        {
+
+            var sbConnectionString = _config.GetValue<string>("ServiceBusRepoSettings:ServiceBusConnectionString");
+            var tokenProvider = TokenProvider.CreateManagedServiceIdentityTokenProvider();
+            var sbConnectionStringBuilder = new ServiceBusConnectionStringBuilder(sbConnectionString);
+            var managementClient = new ManagementClient(sbConnectionStringBuilder, tokenProvider);
+
+            var queues = await managementClient.GetQueuesAsync().ConfigureAwait(false);         
+            var regexString = _config.GetValue<string>("ServiceBusRepoSettings:QueueSelectionRegex");
+            var queueSelectionRegex = new Regex(regexString);
+            var errorQueues = queues.Where(q => queueSelectionRegex.IsMatch(q.Path)).Select(x => x.Path);            
+
+#if DEBUG
+            _logger.LogDebug("Error Queues:");
+            foreach (var queue in errorQueues)
+            {
+                _logger.LogDebug(queue);
+            }
+#endif
+            return errorQueues;
         }
 
         public async Task<IList<sbMessageModel>> PeekMessages(string queueName)
@@ -47,13 +73,13 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
 
             while (peekedMessages.Count > 0)
             {
-                foreach(var msg in peekedMessages)
+                foreach (var msg in peekedMessages)
                 {
                     var messageModel = FormatMsgToLog(msg);
                     totalMessages++;
                     if (totalMessages % notifyBatchSize == 0)
                         _logger.LogDebug($"    {queueName} - processed: {totalMessages}");
-               
+
                     formattedMessages.Add(messageModel);
                 }
                 peekedMessages = await messageReceiver.PeekAsync(batchSize);
@@ -78,7 +104,7 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
                     : "";
 
                 messageModel.MessageId = msg.UserProperties["NServiceBus.MessageId"].ToString();
-                messageModel.TimeOfFailure = msg.UserProperties["NServiceBus.TimeOfFailure"].ToString(); 
+                messageModel.TimeOfFailure = msg.UserProperties["NServiceBus.TimeOfFailure"].ToString();
                 messageModel.ExceptionType = msg.UserProperties["NServiceBus.ExceptionInfo.ExceptionType"].ToString();
                 messageModel.OriginatingEndpoint = msg.UserProperties["NServiceBus.OriginatingEndpoint"].ToString();
                 messageModel.ProcessingEndpoint = msg.UserProperties["NServiceBus.ProcessingEndpoint"].ToString();
@@ -86,7 +112,7 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
                 messageModel.StackTrace = msg.UserProperties["NServiceBus.ExceptionInfo.StackTrace"].ToString().CrLfToTilde();
                 messageModel.ExceptionMessage = exceptionMessageNoCrLf;
             }
-            else if(msg.UserProperties.TryGetValue("DeadLetterReason", out exceptionMessage))
+            else if (msg.UserProperties.TryGetValue("DeadLetterReason", out exceptionMessage))
             {
                 exceptionMessageNoCrLf = exceptionMessage.ToString().CrLfToTilde();
                 enclosedMessageTypeTrimmed = msg.UserProperties.ContainsKey("NServiceBus.EnclosedMessageTypes")
@@ -94,7 +120,7 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
                     : "";
 
                 messageModel.MessageId = msg.UserProperties["NServiceBus.MessageId"].ToString();
-                messageModel.TimeOfFailure = msg.UserProperties["NServiceBus.TimeSent"].ToString(); 
+                messageModel.TimeOfFailure = msg.UserProperties["NServiceBus.TimeSent"].ToString();
                 messageModel.ExceptionType = "Unknown";
                 messageModel.OriginatingEndpoint = msg.UserProperties["NServiceBus.OriginatingEndpoint"].ToString();
                 messageModel.ProcessingEndpoint = "Unknown";
@@ -113,6 +139,6 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
             }
 #endif
             return messageModel;
-        } 
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.SvcBusService
     public interface ISvcBusService
     {
         Task<IList<sbMessageModel>> PeekMessages(string queueName);
+        Task<IEnumerable<string>> GetErrorQueuesAsync();
     }
 }
