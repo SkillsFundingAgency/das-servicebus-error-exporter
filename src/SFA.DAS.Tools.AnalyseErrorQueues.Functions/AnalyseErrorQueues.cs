@@ -20,7 +20,7 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Functions
 #if DEBUG
         public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo timer, ILogger log)
 #else
-        public async Task Run([TimerTrigger("0 0 */4 * * *")]TimerInfo timer, ILogger log)
+        public async Task Run([TimerTrigger("0 0 * * * *")]TimerInfo timer, ILogger log)
 #endif
         {
             if (log.IsEnabled(LogLevel.Information))
