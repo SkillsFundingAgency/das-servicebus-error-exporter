@@ -30,5 +30,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Tools.AnalyseErrorQueues.Engine\SFA.DAS.Tools.AnalyseErrorQueues.Engine.csproj" />
     <ProjectReference Include="..\SFA.DAS.Tools.AnalyseErrorQueues.Services\SFA.DAS.Tools.AnalyseErrorQueues.Services.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Tools.JiraDataAnalyser.Engine\SFA.DAS.Tools.JiraDataAnalyser.Engine.csproj" />
   </ItemGroup>
 </Project>

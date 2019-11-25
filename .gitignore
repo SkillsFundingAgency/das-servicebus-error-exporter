@@ -336,6 +336,7 @@ ASALocalRun/
 # Local Settings file
 appsettings.local.json
 local.appsettings.json
+local.settings.json
 
 # generated files 
 *.psv
