@@ -139,10 +139,6 @@
                                 "value": "[parameters('sharedStorageAccountConnectionString')]"
                             },
                             {
-                                "name": "AzureWebJobsDashboard",
-                                "value": "[parameters('sharedStorageAccountConnectionString')]"
-                            },
-                            {
                                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                                 "value": "[reference('function-app-insights').outputs.InstrumentationKey.value]"
                             },
@@ -169,6 +165,10 @@
                             {
                                 "name": "AppName",
                                 "value": "das-servicebus-error-exporter"
+                            },
+                            {
+                                "name": "FUNCTIONS_WORKER_RUNTIME",
+                                "value": "dotnet"
                             }
                         ]
                     }
