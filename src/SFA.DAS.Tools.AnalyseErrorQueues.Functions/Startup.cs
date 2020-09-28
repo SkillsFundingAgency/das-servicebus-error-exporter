@@ -10,8 +10,9 @@ using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using SFA.DAS.Tools.AnalyseErrorQueues.Functions.Infrastructure;
 using NLog.Extensions.Logging;
+using SFA.DAS.Tools.AnalyseErrorQueues.Functions;
 
-[assembly: FunctionsStartup(typeof(SFA.DAS.Tools.AnalyseErrorQueues.Functions.Startup))]
+[assembly: FunctionsStartup(typeof(Startup))]
 
 namespace SFA.DAS.Tools.AnalyseErrorQueues.Functions
 {
