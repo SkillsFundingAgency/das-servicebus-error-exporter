@@ -54,6 +54,8 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.DataSinkService
             var workspaceId = _config["LADataSinkSettings:workspaceId"];
             var sendBatches = errorsByReceivingDomain.ChunkBy(chunkSize);
 
+            _logger.LogInformation($"stringToHashDateString: {datestring}");
+
             _logger.LogInformation($"chunkSize: {chunkSize}");
             _logger.LogInformation($"sendBatches: {sendBatches}");
 
