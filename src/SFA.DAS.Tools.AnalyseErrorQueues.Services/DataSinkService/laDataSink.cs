@@ -16,7 +16,7 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.DataSinkService
 {
     public class laDataSink : IDataSink
     {
-		private static string datestring = string.Empty;
+		private string datestring = string.Empty;
 		private readonly IConfiguration _config;
 		private readonly ILogger _logger;
 
@@ -29,9 +29,7 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Services.DataSinkService
         public void SinkMessages(string envName, string queueName, IEnumerable<sbMessageModel> messages)
         {
             // Create a hash for the API signature
-#pragma warning disable S2696 // Instance members should not write to "static" fields
-            datestring = datestring == string.Empty ? DateTime.UtcNow.ToString("r") : datestring;
-#pragma warning restore S2696 // Instance members should not write to "static" fields
+            datestring = DateTime.UtcNow.ToString("r");
 
             // Create aggregate messages to send to azure log analytics.
             var errorsByReceivingDomain =
