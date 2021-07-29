@@ -43,7 +43,7 @@ steps:
     projects: 'src/**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-- template: azure-pipelines-templates/dependency-check.yml@das-platform-building-blocks    
+- template: azure-pipelines-templates/build/step/dependency-check.yml@das-platform-building-blocks    
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Azure Function App'
