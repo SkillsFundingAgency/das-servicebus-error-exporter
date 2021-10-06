@@ -179,6 +179,10 @@
                                 {
                                     "name": "AppName",
                                     "value": "das-servicebus-error-exporter"
+                                },
+                                {
+                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
+                                    "value": "1"
                                 }
                             ]
                         }
