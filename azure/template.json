@@ -2,22 +2,25 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "tags": {
-            "type": "object"
-        },
-        "resourceGroupLocation": {
+        "resourceEnvironmentName": {
             "type": "string"
         },
         "environmentName": {
             "type": "string"
         },
-        "configNames": {
-            "type": "string"
-        },
-        "resourceEnvironmentName": {
-            "type": "string"
-        },
         "serviceName": {
+            "type": "string"
+        },
+        "sharedEnvResourceGroup": {
+            "type": "string"
+        },
+        "configurationStorageConnectionString": {
+            "type": "securestring"
+        },
+        "tags": {
+            "type": "object"
+        },
+        "resourceGroupLocation": {
             "type": "string"
         },
         "sharedWorkerAppServicePlanName": {
@@ -29,25 +32,23 @@
         "workerAccessRestrictions": {
             "type": "array"
         },
-        "loggingRedisConnectionString": {
-            "type": "securestring"
+        "appServicePlanInstances": {
+            "type": "int",
+            "defaultValue": 1
         },
-        "configurationStorageConnectionString": {
+        "appServicePlanSize": {
+            "type": "string",
+            "defaultValue": "1"
+        },
+        "loggingRedisConnectionString": {
             "type": "securestring"
         },
         "sharedStorageAccountConnectionString": {
             "type": "securestring"
         },
-        "sharedEnvResourceGroup": {
-            "type": "string"
-        },
-        "functionsExtensionVersion": {
+        "utcValue": {
             "type": "string",
-            "defaultValue": "~4"
-        },
-        "netFrameworkVersion": {
-            "type": "string",
-            "defaultValue": "v8.0"
+            "defaultValue": "[utcNow()]"
         }
     },
     "variables": {
@@ -57,12 +58,12 @@
         "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
         "sharedStorageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'),'sharedstr'))]",
         "sharedServiceBusName": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-shared-ns'))]",
-        "configNames": "SFA.DAS.Tools.AnalyseErrorQueues.Functions",
         "storageAccountContainerArray": [
             {
                 "name": "service-bus-errors-exporter"
             }
-        ]
+        ],
+        "configNames": "SFA.DAS.Tools.AnalyseErrorQueues.Functions"
     },
     "resources": [
         {
@@ -147,33 +148,21 @@
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
                     },
+                    "netFrameworkVersion": {
+                        "value": "v8.0"
+                     },
                     "subnetResourceId": {
                         "value": "[parameters('sharedWorkerSubnetResourceId')]"
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('workerAccessRestrictions')]"
                     },
-                    "netFrameworkVersion": {
-                        "value": "[parameters('netFrameworkVersion')]"
-                    },
                     "functionAppAppSettings": {
                         "value": {
                             "array": [
                                 {
-                                    "name": "AzureWebJobsStorage",
-                                    "value": "[parameters('sharedStorageAccountConnectionString')]"
-                                },
-                                {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                                     "value": "[reference('function-app-insights').outputs.InstrumentationKey.value]"
-                                },
-                                {
-                                    "name": "FUNCTIONS_EXTENSION_VERSION",
-                                    "value": "[parameters('functionsExtensionVersion')]"
-                                },
-                                {
-                                    "name": "FUNCTIONS_WORKER_RUNTIME",
-                                    "value": "dotnet-isolated"
                                 },
                                 {
                                     "name": "EnvironmentName",
@@ -181,11 +170,15 @@
                                 },
                                 {
                                     "name": "ConfigNames",
-                                    "value": "[toUpper(parameters('configNames'))]"
+                                    "value": "[variables('configNames')]"
                                 },
                                 {
                                     "name": "Version",
                                     "value": "1.0"
+                                },
+                                {
+                                    "name": "AzureWebJobsStorage",
+                                    "value": "[parameters('sharedStorageAccountConnectionString')]"
                                 },
                                 {
                                     "name": "LoggingRedisConnectionString",
@@ -198,6 +191,14 @@
                                 {
                                     "name": "AppName",
                                     "value": "das-servicebus-error-exporter"
+                                },
+                                {
+                                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                                    "value": "~4"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_RUNTIME",
+                                    "value": "dotnet-isolated"
                                 },
                                 {
                                     "name": "WEBSITE_RUN_FROM_PACKAGE",
