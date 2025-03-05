@@ -17,6 +17,12 @@
         "configurationStorageConnectionString": {
             "type": "securestring"
         },
+        "loggingRedisConnectionString": {
+            "type": "securestring"
+        },
+        "loggingRedisKey": {
+            "type": "string"
+        },
         "tags": {
             "type": "object"
         },
@@ -40,8 +46,12 @@
             "type": "string",
             "defaultValue": "1"
         },
-        "loggingRedisConnectionString": {
-            "type": "securestring"
+        "logAnalyticsSubscriptionId": {
+            "type": "string",
+            "defaultValue": "[subscription().subscriptionId]"
+        },
+        "logAnalyticsWorkspaceName": {
+            "type": "string"
         },
         "sharedStorageAccountConnectionString": {
             "type": "securestring"
@@ -56,6 +66,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
+        "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]",
         "sharedStorageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'),'sharedstr'))]",
         "sharedServiceBusName": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-shared-ns'))]",
         "storageAccountContainerArray": [
@@ -67,7 +78,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "name": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/resourceGroups",
             "location": "[parameters('resourceGroupLocation')]",
@@ -104,7 +115,34 @@
             }
         },
         {
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(variables('appServicePlanName'), '-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServicePlanName": {
+                        "value": "[variables('appServicePlanName')]"
+                    },
+                    "aspSize": {
+                        "value": "[parameters('appServicePlanSize')]"
+                    },
+                    "aspInstances": {
+                        "value": "[parameters('appServicePlanInstances')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('resourceGroupName')]"
+            ]
+        },
+        {
+            "apiVersion": "2021-04-01",
             "name": "function-app-insights",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
@@ -128,7 +166,7 @@
             ]
         },
         {
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "name": "function-app",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
@@ -143,7 +181,7 @@
                         "value": "[variables('functionAppName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedWorkerAppServicePlanName')]"
+                        "value": "[variables('appServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
@@ -154,19 +192,20 @@
                     "subnetResourceId": {
                         "value": "[parameters('sharedWorkerSubnetResourceId')]"
                     },
-                    "ipSecurityRestrictions": {
-                        "value": "[parameters('workerAccessRestrictions')]"
-                    },
                     "functionAppAppSettings": {
                         "value": {
                             "array": [
                                 {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('function-app-insights').outputs.InstrumentationKey.value]"
+                                    "name": "AppName",
+                                    "value": "das-servicebus-error-exporter"
                                 },
                                 {
                                     "name": "EnvironmentName",
-                                    "value": "[toUpper(parameters('environmentName'))]"
+                                    "value": "[parameters('environmentName')]"
+                                },
+                                {
+                                    "name": "ConfigurationStorageConnectionString",
+                                    "value": "[parameters('configurationStorageConnectionString')]"
                                 },
                                 {
                                     "name": "ConfigNames",
@@ -177,6 +216,10 @@
                                     "value": "1.0"
                                 },
                                 {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[reference('function-app-insights').outputs.InstrumentationKey.value]"
+                                },
+                                {
                                     "name": "AzureWebJobsStorage",
                                     "value": "[parameters('sharedStorageAccountConnectionString')]"
                                 },
@@ -185,12 +228,8 @@
                                     "value": "[parameters('loggingRedisConnectionString')]"
                                 },
                                 {
-                                    "name": "ConfigurationStorageConnectionString",
-                                    "value": "[parameters('configurationStorageConnectionString')]"
-                                },
-                                {
-                                    "name": "AppName",
-                                    "value": "das-servicebus-error-exporter"
+                                    "name": "LoggingRedisKey",
+                                    "value": "[parameters('loggingRedisKey')]"
                                 },
                                 {
                                     "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -206,6 +245,9 @@
                                 }
                             ]
                         }
+                    },
+                    "ipSecurityRestrictions": {
+                        "value": "[parameters('workerAccessRestrictions')]"
                     }
                 }
             }
