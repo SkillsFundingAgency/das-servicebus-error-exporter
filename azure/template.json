@@ -11,6 +11,9 @@
         "environmentName": {
             "type": "string"
         },
+        "configNames": {
+            "type": "string"
+        },
         "resourceEnvironmentName": {
             "type": "string"
         },
@@ -29,6 +32,14 @@
         "loggingRedisConnectionString": {
             "type": "securestring"
         },
+        "appServicePlanInstances": {
+            "type": "int",
+            "defaultValue": 1
+        },
+        "appServicePlanSize": {
+            "type": "string",
+            "defaultValue": "1"
+        },
         "configurationStorageConnectionString": {
             "type": "securestring"
         },
@@ -40,7 +51,15 @@
         },
         "functionsExtensionVersion": {
             "type": "string",
-            "defaultValue": "~3.0"
+            "defaultValue": "~4"
+        },
+        "netFrameworkVersion": {
+            "type": "string",
+            "defaultValue": "v8.0"
+        },
+        "utcValue": {
+            "type": "string",
+            "defaultValue": "[utcNow()]"
         }
     },
     "variables": {
@@ -54,7 +73,8 @@
             {
                 "name": "service-bus-errors-exporter"
             }
-        ]
+        ],
+        "configNames": "SFA.DAS.Tools.AnalyseErrorQueues.Functions"
     },
     "resources": [
         {
@@ -93,6 +113,33 @@
                 "name": "storagecontainercopy",
                 "count": "[length(variables('storageAccountContainerArray'))]"
             }
+        },
+        {
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('sharedWorkerAppServicePlanName'), '-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServicePlanName": {
+                        "value": "[parameters('sharedWorkerAppServicePlanName')]"
+                    },
+                    "aspSize": {
+                        "value": "[parameters('appServicePlanSize')]"
+                    },
+                    "aspInstances": {
+                        "value": "[parameters('appServicePlanInstances')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('resourceGroupName')]"
+            ]
         },
         {
             "apiVersion": "2020-10-01",
@@ -145,6 +192,9 @@
                     "ipSecurityRestrictions": {
                         "value": "[parameters('workerAccessRestrictions')]"
                     },
+                    "netFrameworkVersion": {
+                        "value": "[parameters('netFrameworkVersion')]"
+                    },
                     "functionAppAppSettings": {
                         "value": {
                             "array": [
@@ -162,11 +212,19 @@
                                 },
                                 {
                                     "name": "FUNCTIONS_WORKER_RUNTIME",
-                                    "value": "dotnet"
+                                    "value": "dotnet-isolated"
                                 },
                                 {
                                     "name": "EnvironmentName",
                                     "value": "[toUpper(parameters('environmentName'))]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('configNames')]"
+                                },
+                                {
+                                    "name": "Version",
+                                    "value": "1.0"
                                 },
                                 {
                                     "name": "LoggingRedisConnectionString",
