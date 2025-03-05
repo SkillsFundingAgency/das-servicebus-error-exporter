@@ -57,6 +57,7 @@
         "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
         "sharedStorageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'),'sharedstr'))]",
         "sharedServiceBusName": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-shared-ns'))]",
+        "configNames": "SFA.DAS.Tools.AnalyseErrorQueues.Functions",
         "storageAccountContainerArray": [
             {
                 "name": "service-bus-errors-exporter"
