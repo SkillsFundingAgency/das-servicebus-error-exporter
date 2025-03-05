@@ -56,6 +56,9 @@
         "sharedStorageAccountConnectionString": {
             "type": "securestring"
         },
+        "sharedManagementResourceGroup": {
+            "type": "string"
+        },
         "utcValue": {
             "type": "string",
             "defaultValue": "[utcNow()]"
@@ -158,6 +161,9 @@
                     },
                     "attachedService": {
                         "value": "[variables('functionAppName')]"
+                    },
+                    "logAnalyticsWorkspaceId": {
+                        "value": "[resourceId(parameters('logAnalyticsSubscriptionId'),parameters('sharedManagementResourceGroup'),'Microsoft.OperationalInsights/workspaces',parameters('logAnalyticsWorkspaceName'))]"
                     }
                 }
             },
@@ -184,7 +190,7 @@
                         "value": "[variables('appServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[parameters('sharedEnvResourceGroup')]"
+                        "value": "[variables('resourceGroupName')]"
                     },
                     "netFrameworkVersion": {
                         "value": "v8.0"
