@@ -17,6 +17,9 @@
         "serviceName": {
             "type": "string"
         },
+        "deployPrivateLinkedScopedResource": {
+            "type": "bool"
+        },
         "sharedWorkerAppServicePlanName": {
             "type": "string"
         },
@@ -50,6 +53,7 @@
         "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
         "sharedStorageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'),'sharedstr'))]",
         "sharedServiceBusName": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-shared-ns'))]",
+        "privateLinkScopeName": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-shared-ampls'))]",
         "storageAccountContainerArray": [
             {
                 "name": "service-bus-errors-exporter"
@@ -117,6 +121,31 @@
             "dependsOn": [
                 "[variables('resourceGroupName')]"
             ]
+        },
+        {
+            "condition": "[parameters('deployPrivateLinkedScopedResource')]",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(variables('functionAppName'), '-private-link-scoped-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'private-linked-scoped-resource.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "privateLinkScopeName": {
+                        "value": "[variables('privateLinkScopeName')]"
+                    },
+                    "scopedResourceName": {
+                        "value": "[variables('functionAppName')]"
+                    },
+                    "scopedResourceId": {
+                        "value": "[reference(function-app-insights).outputs.AppInsightsResourceId.value]"
+                    }
+                }
+            }
         },
         {
             "apiVersion": "2020-10-01",
