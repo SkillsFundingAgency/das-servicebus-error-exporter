@@ -146,7 +146,7 @@
                         "value": "[variables('functionAppName')]"
                     },
                     "scopedResourceId": {
-                        "value": "[reference(function-app-insights).outputs.AppInsightsResourceId.value]"
+                        "value": "[reference('function-app-insights').outputs.AppInsightsResourceId.value]"
                     }
                 }
             }
