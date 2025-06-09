@@ -50,14 +50,7 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Functions
 
                 return new QueueAnalyser(sink, svc, config, log);
             });
-            //var connectionstring = config["APPINSIGHTS_INSTRUMENTATIONKEY"];
-            //builder.Services.AddLogging((options) =>
-            //{
-            //    options.SetMinimumLevel(LogLevel.Information);
-            //    options.AddApplicationInsightsWebJobs(o => o.InstrumentationKey = config["APPINSIGHTS_INSTRUMENTATIONKEY"]);
-            //});
-
-       }
+        }
 
         public static IConfiguration LoadConfiguration(string appDirectory, IConfiguration configurationService)
         {
