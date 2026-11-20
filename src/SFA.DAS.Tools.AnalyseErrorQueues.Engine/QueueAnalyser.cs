@@ -58,7 +58,7 @@ namespace SFA.DAS.Tools.AnalyseErrorQueues.Engine
                 totalMessages += peekedMessages.Count;
                 if (peekedMessages.Any())
                 {
-                    _dataSink.SinkMessages(envName, queueName, peekedMessages);
+                    await _dataSink.SinkMessages(envName, queueName, peekedMessages);
                 }
                 _logger.LogInformation($"Finished queue: {queueName} - processed: {peekedMessages.Count} messages");
             }
